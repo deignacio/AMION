@@ -36,7 +36,7 @@ public class DefaultActions extends Activity {
         // Set the click listener for the btnWhosOnCall
         OnClickListener btnWhosOnCallListener = new OnClickListener() {
             public void onClick(View v) {
-                PerformOnCallSearch();
+                performSearch("OnCall");
             }
         };
         btnWhosOnCall.setOnClickListener(btnWhosOnCallListener);
@@ -44,27 +44,17 @@ public class DefaultActions extends Activity {
         // Set the click listener for the btnWhosOnBprCoverage
         OnClickListener btnWhosOnBprCoverageListener = new OnClickListener() {
             public void onClick(View v) {
-                PerformBprCoverageSearch();
+                performSearch("BprCoverage");
             }
         };
         btnWhosOnBprCoverage.setOnClickListener(btnWhosOnBprCoverageListener);
     }
 
-    private void PerformOnCallSearch() {
+    private void performSearch(String filter) {
         try {
             Intent intent = new Intent(getApplication(), ResultList.class);
             intent.putExtra("pwd", pwd);
-            intent.putExtra("filter", "OnCall");
-            startActivity(intent);
-        } catch (Exception e) {
-        }
-    }
-
-    private void PerformBprCoverageSearch() {
-        try {
-            Intent intent = new Intent(getApplication(), ResultList.class);
-            intent.putExtra("pwd", pwd);
-            intent.putExtra("filter", "BprCoverage");
+            intent.putExtra("filter", filter);
             startActivity(intent);
         } catch (Exception e) {
         }
