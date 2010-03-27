@@ -68,31 +68,16 @@ public class ResultList extends ListActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-
-        menu.setHeaderTitle(((AMIONPerson) getListAdapter().getItem(info.position)).toString());
-
-        menu.add(0, Menu.FIRST, Menu.NONE, "View Schedule");
-        menu.add(0, Menu.FIRST + 1, Menu.NONE, "Send Page");
-        menu.add(0, Menu.FIRST + 2, Menu.NONE, "Link Contact");
+        AMIONPerson p = (AMIONPerson) getListAdapter().getItem(info.position);
+        p.populateContextMenu(menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
         AMIONPerson p = (AMIONPerson) getListAdapter().getItem(info.position);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(item.getTitle() + " " + p.toString());
-        builder.setCancelable(true);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
-
+        p.onContextMenuItemSelected(context, item);
         return true;
     }
 
