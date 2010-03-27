@@ -155,6 +155,7 @@ public class ResultList extends ListActivity {
         menu.add(0, Menu.FIRST + 2, Menu.NONE, "Link Contact");
     }
 
+    @Override
     public boolean onContextItemSelected(MenuItem item) {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
@@ -194,6 +195,7 @@ public class ResultList extends ListActivity {
             ResultList.this.persons = items;
         }
 
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = convertView;
             if (v == null) {
