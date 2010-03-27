@@ -3,7 +3,6 @@ package com.delauneconsulting.AMION;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,44 +52,21 @@ public class DefaultActions extends Activity {
 
     private void PerformOnCallSearch() {
         try {
-
-            // String origUrl =
-            // "http://www.amion.com/cgi-bin/ocs?Lo=%s&Rpt=619";
-            // String response =
-            // Helper.getHttpResponseAsString(String.format(origUrl, pwd));
-
-            // prepend the password to the response string, so you can see it on
-            // the next screen.
-            // response = pwd + " | " + response;
-
             Intent intent = new Intent(getApplication(), ResultList.class);
-            // intent.setData(Uri.parse(response));
             intent.putExtra("pwd", pwd);
             intent.putExtra("filter", "OnCall");
             startActivity(intent);
-
         } catch (Exception e) {
         }
     }
 
     private void PerformBprCoverageSearch() {
         try {
-
-            String origUrl = "http://www.amion.com/cgi-bin/ocs?Lo=%s&Rpt=619";
-            String response = Helper.getHttpResponseAsString(String.format(origUrl, pwd));
-
-            // prepend the password to the response string, so you can see it on
-            // the next screen.
-            // response = pwd + " | " + response;
-
             Intent intent = new Intent(getApplication(), ResultList.class);
-            intent.setData(Uri.parse(response));
             intent.putExtra("pwd", pwd);
             intent.putExtra("filter", "BprCoverage");
             startActivity(intent);
-
         } catch (Exception e) {
         }
     }
-
 }
