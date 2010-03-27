@@ -30,8 +30,11 @@ public class DefaultActions extends Activity {
         Intent intent = getIntent();
         pwd = intent.getDataString();
 
-        // set title
-        this.setTitle("AMION - " + pwd);
+        AMIONReport amionReport = AMION.reports.get(pwd);
+
+        // This is a meant to be a generic List page, so you can set the title
+        // to whatever here.
+        this.setTitle(amionReport.getDefaultTitle());
 
         // Set the click listener for the btnWhosOnCall
         OnClickListener btnWhosOnCallListener = new OnClickListener() {

@@ -2,6 +2,7 @@ package com.delauneconsulting.AMION;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,6 +37,7 @@ public class AMION extends Activity {
     ArrayAdapter<String> recentSearchesAdapter;
     ArrayList<String> searchList;
     String recentSearchItemSelected;
+    public static HashMap<String, AMIONReport> reports = new HashMap<String, AMIONReport>();;
 
     /** Called when the activity is first created. */
     @Override
@@ -152,6 +154,15 @@ public class AMION extends Activity {
         try {
 
             pwd = pwd.trim();
+
+            AMIONReport report = null;
+            if (reports.containsKey(pwd)) {
+                report = reports.get(pwd);
+            } else {
+                // currently only OncallReport is supported
+                report = new OncallReport(pwd);
+                reports.put(pwd, report);
+            }
 
             if (saveSearch)
                 SaveLastSearch(pwd.toString());

@@ -3,10 +3,8 @@ package com.delauneconsulting.AMION;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -25,11 +23,9 @@ import android.widget.AdapterView.OnItemClickListener;
 public class ResultList extends ListActivity {
 
     MyAMIONPersonAdapter adapter;
+    AMIONReport amionReport = null;
     private final Context context = this;
-    private ArrayList<AMIONPerson> persons = null;
-
-    private String pwd;
-    private String filter;
+    private String filter = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -55,93 +51,18 @@ public class ResultList extends ListActivity {
         Intent intent = getIntent();
         // String httpResponse = intent.getDataString();
         Bundle extras = intent.getExtras();
-        pwd = extras.getString("pwd");
+        String pwd = extras.getString("pwd");
         filter = extras.getString("filter");
 
-        // TODO: Find a better place to store this URL
-        String origUrl = "http://www.amion.com/cgi-bin/ocs?Lo=%s&Rpt=619";
-        String httpResponse = Helper.getHttpResponseAsString(String.format(origUrl, pwd));
+        amionReport = AMION.reports.get(pwd);
 
         // This is a meant to be a generic List page, so you can set the title
         // to whatever here.
-        setPageTitle(httpResponse);
-
-        // parse the httpResponse into an ArrayList of AMIONPerson objects
-        persons = createAMIONPersonList(httpResponse);
+        this.setTitle(amionReport.getTitle(filter));
 
         // Setup and bind the adapter for the ListView with the ArrayList
-        adapter = new MyAMIONPersonAdapter(this, R.layout.list_item, persons);
+        adapter = new MyAMIONPersonAdapter(this, R.layout.list_item, amionReport.getPeople(filter));
         setListAdapter(adapter);
-    }
-
-    // Set the title of the page
-    public void setPageTitle(String s) {
-        try {
-            // split the result set into lines
-            String[] lines = null;
-            lines = s.split("\r\n|\r|\n");
-
-            String date = lines[0].replace("Assignments for", "").trim();
-            this.setTitle(pwd + " | " + filter + " | " + date);
-        } catch (Exception e) {
-        }
-    }
-
-    // Create the list of AMIONPerson objects from the httpResonse
-    public ArrayList<AMIONPerson> createAMIONPersonList(String s) {
-        ArrayList<AMIONPerson> peeps = new ArrayList<AMIONPerson>();
-
-        try {
-
-            // split the result set into lines
-            String[] lines = null;
-            lines = s.split("\r\n|\r|\n");
-
-            AMIONPerson p;
-            for (int i = 0; i < lines.length; i++) {
-
-                if (lines[i].length() > 0 && lines[i].startsWith("\"")) {
-
-                    p = new AMIONPerson();
-                    p.comment = lines[i];
-
-                    int index = lines[i].indexOf("\"", 2);
-                    String personName = lines[i].substring(1, index);
-
-                    // TODO: Split first and last names out
-                    p.lastName = personName;
-
-                    // get rid of the name field, since we already have it, then
-                    // clean up everything else
-                    lines[i] = lines[i].replace("\"" + personName + "\",", "");
-                    String[] temp = lines[i].split(",");
-                    for (int j = 0; j < temp.length; j++) {
-                        temp[j] = temp[j].trim();
-                        if (temp[j].contains("\"")) {
-                            temp[j] = temp[j].replace("\"", "").trim();
-                        }
-                    }
-
-                    // this is just the "job"
-                    p.currentJob = temp[2];
-
-                    if (filter.equalsIgnoreCase("OnCall") && !p.currentJob.contains("Bpr Coverage")) {
-                        peeps.add(p);
-                    } else if (filter.equalsIgnoreCase("BprCoverage")
-                            && p.currentJob.contains("Bpr Coverage")) {
-                        peeps.add(p);
-                    }
-                }
-
-            }
-
-            // sort the custom ArrayList of AMIONPerson objects
-            Collections.sort(peeps, new AMIONPersonComparator());
-
-        } catch (Exception e) {
-
-        }
-        return peeps;
     }
 
     @Override
@@ -191,11 +112,11 @@ public class ResultList extends ListActivity {
 
         if (item.getItemId() == 2) {
             if (item.getTitle().toString().equalsIgnoreCase("Sort by Job")) {
-            	Collections.sort(persons, new AMIONPersonJobComparator());
-            	item.setTitle("Sort by Name");
+                Collections.sort(amionReport.getPeople(filter), new AMIONPersonJobComparator());
+                item.setTitle("Sort by Name");
             } else if (item.getTitle().toString().equalsIgnoreCase("Sort by Name")) {
-            	Collections.sort(persons, new AMIONPersonComparator());
-            	item.setTitle("Sort by Job");
+                Collections.sort(amionReport.getPeople(filter), new AMIONPersonComparator());
+                item.setTitle("Sort by Job");
             }
             adapter.notifyDataSetChanged();
         }
@@ -206,10 +127,12 @@ public class ResultList extends ListActivity {
     // in the ListView
     private class MyAMIONPersonAdapter extends ArrayAdapter<AMIONPerson> {
 
+        private ArrayList<AMIONPerson> people = null;
+
         public MyAMIONPersonAdapter(Context context, int textViewResourceId,
                 ArrayList<AMIONPerson> items) {
             super(context, textViewResourceId, items);
-            ResultList.this.persons = items;
+            this.people = items;
         }
 
         @Override
@@ -219,7 +142,7 @@ public class ResultList extends ListActivity {
                 LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(R.layout.list_item, null);
             }
-            AMIONPerson p = persons.get(position);
+            AMIONPerson p = people.get(position);
             if (p != null) {
                 TextView txtName = (TextView) v.findViewById(R.id.txtName);
                 TextView txtJob = (TextView) v.findViewById(R.id.txtJob);
