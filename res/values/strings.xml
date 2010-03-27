@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="welcome">Welcome to AMION!</string>
+    <string name="enterpassword">Enter Your Password:</string>
+    <string name="app_name">AMION</string>
+    <string name="lblRecentSearches">Recent Searches</string>
+    
+</resources>

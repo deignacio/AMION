@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+	<TextView
+		android:id="@+id/txtName"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textSize="18dp"
+		android:layout_marginTop="3px" android:layout_marginLeft="3px" android:layout_marginRight="3px"
+	/>
+ 
+	<TextView
+		android:id="@+id/txtJob"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="10px" android:layout_marginRight="3px" android:layout_marginBottom="3px"
+		android:textSize="12dp"
+	/>
+
+</LinearLayout>

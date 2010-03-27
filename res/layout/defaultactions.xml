@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/banner320" />
+    
+    <!-- 
+    <TextView android:id="@+id/passwordlabel" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" android:layout_marginTop="10px"
+              android:text="What do you want?" />
+     -->
+              
+    <Button android:id="@+id/btnWhosOnCall"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Who's On Call?" 
+            android:layout_width="fill_parent"
+            android:layout_marginTop="10px" android:layout_marginRight="10px" android:layout_marginLeft="10px" />
+            
+    <Button android:id="@+id/btnWhosOnBprCoverage"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Who's On Beeper Coverage?" 
+            android:layout_width="fill_parent"
+            android:layout_margin="10px" />
+
+</LinearLayout>

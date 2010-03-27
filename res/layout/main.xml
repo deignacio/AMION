@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/banner320" />
+    
+    <TextView android:id="@+id/passwordlabel" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" android:layout_marginTop="10px"
+              android:text="@string/enterpassword" />
+              
+    <EditText android:id="@+id/password" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" />
+              
+    <Button android:id="@+id/login"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Login" 
+            android:layout_width="fill_parent"
+            android:layout_margin="10px" />
+            
+    <TextView android:id="@+id/lblRecentSearches" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:text="@string/lblRecentSearches"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" />
+              
+    <ListView android:id="@+id/lstRecentSearches"
+    		  android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" />
+
+</LinearLayout>

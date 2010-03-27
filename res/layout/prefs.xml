@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <TextView android:id="@+id/lblPagingCredentials" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_margin="10px"
+              android:text="Paging System Credentials" />
+    
+    <TextView android:id="@+id/lblUsername" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" android:layout_marginTop="10px"
+              android:text="Username" />
+              
+    <EditText android:id="@+id/txtUsername" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" />
+    
+    <TextView android:id="@+id/lblPassword" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" android:layout_marginTop="10px"
+              android:text="Password:" />
+              
+    <EditText android:id="@+id/txtPassword" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content"
+              android:inputType="textPassword"
+              android:layout_marginLeft="10px" android:layout_marginRight="10px" />
+              
+    <Button android:id="@+id/btnSavePrefs"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Save" 
+            android:layout_width="fill_parent"
+            android:layout_margin="10px" />
+
+</LinearLayout>
