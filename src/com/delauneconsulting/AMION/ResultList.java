@@ -180,8 +180,25 @@ public class ResultList extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        menu.add(0, Menu.FIRST, Menu.NONE, "Refresh"); // .setIcon(android.R.drawable.ic_menu_refresh);
+        menu.add(0, Menu.FIRST, Menu.NONE, "Refresh"); //.setIcon(android.R.drawable.ic_menu_refresh);
+        menu.add(0, Menu.FIRST+1, Menu.NONE, "Sort by Job").setIcon(android.R.drawable.ic_menu_sort_alphabetically);
+        
+        return true;
+    }
+    @Override
+    // Setup the action performed for menu items (the right way)
+    public boolean onOptionsItemSelected(MenuItem item) {
 
+        if (item.getItemId() == 2) {
+            if (item.getTitle().toString().equalsIgnoreCase("Sort by Job")) {
+            	Collections.sort(persons, new AMIONPersonJobComparator());
+            	item.setTitle("Sort by Name");
+            } else if (item.getTitle().toString().equalsIgnoreCase("Sort by Name")) {
+            	Collections.sort(persons, new AMIONPersonComparator());
+            	item.setTitle("Sort by Job");
+            }
+            adapter.notifyDataSetChanged();
+        }
         return true;
     }
 
