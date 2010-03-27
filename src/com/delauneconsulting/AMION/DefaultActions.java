@@ -31,6 +31,9 @@ public class DefaultActions extends Activity {
         Intent intent = getIntent();
         pwd = intent.getDataString();
 
+        // set title
+        this.setTitle("AMION - " + pwd);
+
         // Set the click listener for the btnWhosOnCall
         OnClickListener btnWhosOnCallListener = new OnClickListener() {
             public void onClick(View v) {
