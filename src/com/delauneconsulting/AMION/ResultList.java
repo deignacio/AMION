@@ -179,7 +179,7 @@ public class ResultList extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        menu.add(0, Menu.FIRST, menu.NONE, "Refresh"); // .setIcon(android.R.drawable.ic_menu_refresh);
+        menu.add(0, Menu.FIRST, Menu.NONE, "Refresh"); // .setIcon(android.R.drawable.ic_menu_refresh);
 
         return true;
     }

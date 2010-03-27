@@ -115,9 +115,9 @@ public class AMION extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        menu.add(0, Menu.FIRST, menu.NONE, "Settings").setIcon(
+        menu.add(0, Menu.FIRST, Menu.NONE, "Settings").setIcon(
                 android.R.drawable.ic_menu_preferences);
-        menu.add(0, Menu.FIRST + 1, menu.NONE, "About").setIcon(
+        menu.add(0, Menu.FIRST + 1, Menu.NONE, "About").setIcon(
                 android.R.drawable.ic_menu_info_details); // .setIcon(R.drawable.cloud);
 
         return true;
