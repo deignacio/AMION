@@ -152,15 +152,6 @@ public class AMION extends Activity {
         try {
 
             pwd = pwd.trim();
-            // String origUrl =
-            // "http://www.amion.com/cgi-bin/ocs?Lo=%s&Rpt=619";
-            // String response =
-            // Helper.getHttpResponseAsString(String.format(origUrl, pwd));
-
-            // prepend the password to the response string, so you can see it on
-            // the next screen.
-            // TODO: fix this so the password is passed in a better way.
-            // response = pwd + " | " + response;
 
             if (saveSearch)
                 SaveLastSearch(pwd.toString());
