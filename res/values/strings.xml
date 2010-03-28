@@ -6,4 +6,6 @@
     <string name="app_name">AMION</string>
     <string name="lblRecentSearches">Recent Searches</string>
     
+
+<string name="aboutUs">AMION\n\nCopyright DelauneConsulting 2010\n\nCredits:\nChristian Del\'Aune\nDave Ignacio</string>
 </resources>
