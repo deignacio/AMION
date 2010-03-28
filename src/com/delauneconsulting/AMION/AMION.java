@@ -133,7 +133,7 @@ public class AMION extends Activity {
             startActivity(intent);
         } else if (item.getItemId() == 2) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("AMION\n\nCopyright DelauneConsulting 2010\n\nCredits:\nChristian Del'Aune\nDave Ignacio\nAndy Hopper\nAntoine Dubois-Rande");
+            builder.setMessage(R.string.aboutUs);
             builder.setCancelable(true);
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {

@@ -86,7 +86,7 @@ public class ResultList extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        menu.add(0, Menu.FIRST, Menu.NONE, "Refresh"); //.setIcon(android.R.drawable.ic_menu_refresh);
+        menu.add(0, Menu.FIRST, Menu.NONE, "Refresh").setIcon(R.drawable.ic_menu_refresh);
         menu.add(0, Menu.FIRST+1, Menu.NONE, "Sort by Job").setIcon(android.R.drawable.ic_menu_sort_alphabetically);
         menu.add(0, Menu.FIRST+2, Menu.NONE, "Filter Jobs").setIcon(android.R.drawable.ic_menu_search);
 
