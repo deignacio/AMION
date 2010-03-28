@@ -10,4 +10,6 @@ public interface AMIONReport {
 
     public abstract String getDefaultTitle();
 
+    public abstract ArrayList<String> getFilters();
+
 }

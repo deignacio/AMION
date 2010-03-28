@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.Menu;
@@ -167,8 +166,8 @@ public class AMION extends Activity {
             if (saveSearch)
                 SaveLastSearch(pwd.toString());
 
-            Intent intent = new Intent(getApplication(), DefaultActions.class);
-            intent.setData(Uri.parse(pwd));
+            Intent intent = new Intent(getApplication(), ResultList.class);
+            intent.putExtra("pwd", pwd);
             startActivity(intent);
 
         } catch (Exception e) {

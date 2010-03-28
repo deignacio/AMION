@@ -25,6 +25,7 @@ public class ResultList extends ListActivity {
     MyAMIONPersonAdapter adapter;
     AMIONReport amionReport = null;
     private final Context context = this;
+    private String pwd = null;
     private String filter = null;
 
     /** Called when the activity is first created. */
@@ -49,10 +50,9 @@ public class ResultList extends ListActivity {
 
         // Pull the data that was passed by the calling function
         Intent intent = getIntent();
-        // String httpResponse = intent.getDataString();
         Bundle extras = intent.getExtras();
-        String pwd = extras.getString("pwd");
-        filter = extras.getString("filter");
+        pwd = extras.getString("pwd");
+        filter = extras.getString("filter"); // we want the null if no filter
 
         amionReport = AMION.reports.get(pwd);
 
@@ -88,14 +88,16 @@ public class ResultList extends ListActivity {
 
         menu.add(0, Menu.FIRST, Menu.NONE, "Refresh"); //.setIcon(android.R.drawable.ic_menu_refresh);
         menu.add(0, Menu.FIRST+1, Menu.NONE, "Sort by Job").setIcon(android.R.drawable.ic_menu_sort_alphabetically);
-        
+        menu.add(0, Menu.FIRST+2, Menu.NONE, "Filter Jobs").setIcon(android.R.drawable.ic_menu_search);
+
         return true;
     }
     @Override
     // Setup the action performed for menu items (the right way)
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == 2) {
+        int itemId = item.getItemId();
+        if (itemId == 2) {
             if (item.getTitle().toString().equalsIgnoreCase("Sort by Job")) {
                 Collections.sort(amionReport.getPeople(filter), new AMIONPersonJobComparator());
                 item.setTitle("Sort by Name");
@@ -104,6 +106,10 @@ public class ResultList extends ListActivity {
                 item.setTitle("Sort by Job");
             }
             adapter.notifyDataSetChanged();
+        } else if (itemId == 3) {
+            Intent intent = new Intent(getApplication(), JobFilterList.class);
+            intent.putExtra("pwd", pwd);
+            startActivity(intent);
         }
         return true;
     }
@@ -117,7 +123,11 @@ public class ResultList extends ListActivity {
         public MyAMIONPersonAdapter(Context context, int textViewResourceId,
                 ArrayList<AMIONPerson> items) {
             super(context, textViewResourceId, items);
-            this.people = items;
+            if (items == null) {
+                people = new ArrayList<AMIONPerson>();
+            } else {
+                people = items;
+            }
         }
 
         @Override
