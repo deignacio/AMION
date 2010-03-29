@@ -2,6 +2,7 @@ package com.delauneconsulting.AMION;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.Menu;
@@ -36,6 +36,7 @@ public class AMION extends Activity {
     ArrayAdapter<String> recentSearchesAdapter;
     ArrayList<String> searchList;
     String recentSearchItemSelected;
+    public static HashMap<String, AMIONReport> reports = new HashMap<String, AMIONReport>();;
 
     /** Called when the activity is first created. */
     @Override
@@ -152,21 +153,21 @@ public class AMION extends Activity {
         try {
 
             pwd = pwd.trim();
-            // String origUrl =
-            // "http://www.amion.com/cgi-bin/ocs?Lo=%s&Rpt=619";
-            // String response =
-            // Helper.getHttpResponseAsString(String.format(origUrl, pwd));
 
-            // prepend the password to the response string, so you can see it on
-            // the next screen.
-            // TODO: fix this so the password is passed in a better way.
-            // response = pwd + " | " + response;
+            AMIONReport report = null;
+            if (reports.containsKey(pwd)) {
+                report = reports.get(pwd);
+            } else {
+                // currently only OncallReport is supported
+                report = new OncallReport(pwd);
+                reports.put(pwd, report);
+            }
 
             if (saveSearch)
                 SaveLastSearch(pwd.toString());
 
-            Intent intent = new Intent(getApplication(), DefaultActions.class);
-            intent.setData(Uri.parse(pwd));
+            Intent intent = new Intent(getApplication(), ResultList.class);
+            intent.putExtra("pwd", pwd);
             startActivity(intent);
 
         } catch (Exception e) {
