@@ -2,7 +2,10 @@ package com.delauneconsulting.AMION;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -159,7 +162,8 @@ public class AMION extends Activity {
                 report = reports.get(pwd);
             } else {
                 // currently only OncallReport is supported
-                report = new OncallReport(pwd);
+            	Calendar c = Calendar.getInstance();
+                report = new OncallReport(pwd, c);
                 reports.put(pwd, report);
             }
 

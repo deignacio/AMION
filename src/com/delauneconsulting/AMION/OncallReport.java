@@ -1,6 +1,7 @@
 package com.delauneconsulting.AMION;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,14 +11,18 @@ public class OncallReport implements AMIONReport {
     final private ArrayList<AMIONPerson> allPeople = new ArrayList<AMIONPerson>();
     final private HashMap<String, ArrayList<AMIONPerson>> tokenizedPeople = new HashMap<String, ArrayList<AMIONPerson>>();
     final private HashMap<String, String> titles = new HashMap<String, String>();
-    final private String urlPattern = "http://www.amion.com/cgi-bin/ocs?Lo=%s&Rpt=619";
+    final private String urlPattern = "http://www.amion.com/cgi-bin/ocs?Login=%s&Rpt=619&Day=%s&Month=%s&Year=%s";
     final private String ignoredToks = "\\W"; //!@#$%^&*()_-+={}[]\\|;:<>,./?`~";
     private String passwd = null;
+    //private Date date;
+    private Calendar calendar;
     private String response = null;
 
-    public OncallReport(String pwd) {
+    public OncallReport(String pwd, Calendar calendar) {
         this.passwd = pwd;
-        this.response = Helper.getHttpResponseAsString(String.format(this.urlPattern, this.passwd));
+        //this.date = date;        
+        this.calendar = calendar;
+        this.response = Helper.getHttpResponseAsString(String.format(this.urlPattern, this.passwd, calendar.getTime().getDate(), calendar.getTime().getMonth()+1, calendar.getTime().getYear()+1900));
         tokenizePeople();
     }
 
@@ -31,28 +36,8 @@ public class OncallReport implements AMIONReport {
                 responseLine = responseTokens.nextToken();
 
                 if (responseLine.length() > 0 && responseLine.startsWith("\"")) {
-                    p = new AMIONPerson();
-                    p.comment = responseLine;
-
-                    int index = responseLine.indexOf("\"", 2);
-                    String personName = responseLine.substring(1, index);
-
-                    // TODO: Split first and last names out
-                    p.lastName = personName;
-
-                    // get rid of the name field, since we already have it, then
-                    // clean up everything else
-                    responseLine = responseLine.replace("\"" + personName + "\",", "");
-                    String[] temp = responseLine.split(",");
-                    for (int j = 0; j < temp.length; j++) {
-                        temp[j] = temp[j].trim();
-                        if (temp[j].contains("\"")) {
-                            temp[j] = temp[j].replace("\"", "").trim();
-                        }
-                    }
-
-                    // this is just the "job"
-                    p.currentJob = temp[2];
+                    p = new AMIONPerson(responseLine);
+                    
                     allPeople.add(p);
 
                     StringTokenizer tokenizer = new StringTokenizer(p.currentJob);
@@ -88,6 +73,13 @@ public class OncallReport implements AMIONReport {
         return "AMION | " + this.passwd;
     }
 
+    public Calendar getDate() {
+    	return this.calendar;
+    }
+    public String getUrl() {
+    	return String.format(this.urlPattern, this.passwd, calendar.getTime().getDate(), calendar.getTime().getMonth()+1, calendar.getTime().getYear()+1900);
+    }
+    
     /* (non-Javadoc)
      * @see com.delauneconsulting.AMION.AMIONReport#getTitle(java.lang.String)
      */
