@@ -9,14 +9,42 @@ import android.view.MenuItem;
 
 public class AMIONPerson {
 
+	public String id = "";
     public String firstName = "";
     public String lastName = "";
     public String currentJob = "";
     public String comment = "";
+    
     public boolean existsInContacts = false;
     public String phoneNumber = "";
 
     public AMIONPerson() {
+    }
+    public AMIONPerson(String strToParse) {
+    	this.comment = strToParse;
+
+        int index = strToParse.indexOf("\"", 2);
+        String personName = strToParse.substring(1, index);
+
+        // TODO: Split first and last names out
+        this.lastName = personName;
+
+        // get rid of the name field, since we already have it, then
+        // clean up everything else
+        strToParse = strToParse.replace("\"" + personName + "\",", "");
+        String[] temp = strToParse.split(",");
+        for (int j = 0; j < temp.length; j++) {
+            temp[j] = temp[j].trim();
+            if (temp[j].contains("\"")) {
+                temp[j] = temp[j].replace("\"", "").trim();
+            }
+        }
+
+        //this is the person id value
+        this.id = temp[0];
+        
+        //this is the job value
+        this.currentJob = temp[2];
     }
 
     public String toString() {
