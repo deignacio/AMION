@@ -14,9 +14,9 @@
 
     <activity android:name=".ResultList">
 </activity>
-<activity android:name=".DefaultActions"></activity>
+
 <activity android:name=".AMIONPrefs"></activity>
-<activity android:name=".JobFilterList"></activity>
+
 </application>
 
 

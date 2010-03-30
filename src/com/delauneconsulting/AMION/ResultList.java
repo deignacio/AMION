@@ -6,7 +6,11 @@ import java.util.Calendar;
 import java.util.Collections;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -19,7 +23,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,18 +32,26 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class ResultList extends Activity {
 
-    MyAMIONPersonAdapter adapter;
-    AMIONReport amionReport = null;
-    //private final Context context = this;
+    private MyAMIONPersonAdapter adapter;
+    private AMIONReport amionReport = null;
     private String pwd = null;
-    private String filter = null;
+    
+    private String[] filtersAvailable;
+    private boolean[] filtersSelected;
+    private ArrayList<String> filters = new ArrayList<String>();
+    
     private String currentSort = "Sort by Name";
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
     
     private ListView lstResults;
     private TextView lblCurrentDate;
     private ImageButton btnPrevDate;
     private ImageButton btnNextDate;
 
+    static final int DATE_DIALOG_ID = 0;
+    static final int FILTER_DIALOG_ID = 1;
+    static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +69,6 @@ public class ResultList extends Activity {
                         Toast.LENGTH_SHORT).show();
             }
         };
-        
-        //getListView().setOnItemClickListener(itemListener);
         lstResults.setOnItemClickListener(itemListener);
 
         // Register the ContextMenu for the ListView
@@ -68,29 +78,42 @@ public class ResultList extends Activity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         pwd = extras.getString("pwd");
-        filter = extras.getString("filter"); // we want the null if no filter
-
-        amionReport = AMION.reports.get(pwd);
-
-        lblCurrentDate = (TextView) findViewById(R.id.lblCurrentDate);
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    	Calendar c = amionReport.getDate();
-    	c.add(Calendar.DATE, 1);
-    	lblCurrentDate.setText(sdf.format(c.getTime()));
         
+        //Create the report for today
+        Calendar c = Calendar.getInstance();
+        amionReport = new OncallReport(pwd, c);
+    	setupReport();
+        
+    	//Set the date in the header control
+        lblCurrentDate = (TextView) findViewById(R.id.lblCurrentDate);
+        lblCurrentDate.setText(sdf.format(c.getTime()));
+        
+        //Setup the button listener for the date control
     	OnClickListener btnDateListener = new OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplication(),
-                        amionReport.getUrl(),
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplication(), amionReport.getUrl(), Toast.LENGTH_SHORT).show();
+            	showDialog(DATE_DIALOG_ID);
             }
         };
         lblCurrentDate.setOnClickListener(btnDateListener);
         
-    	// This is a meant to be a generic List page, so you can set the title
-        // to whatever here.
-        this.setTitle(amionReport.getTitle(filter));
-
+        //Setup the DatePicker dialog for when a user click the date button
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+			
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				Calendar c = amionReport.getDate();
+            	c.set(year, monthOfYear, dayOfMonth);
+            	lblCurrentDate.setText(sdf.format(c.getTime()));
+            	
+            	amionReport = new OncallReport(pwd, c);
+            	clearFilters();
+            	setupReport();
+            	refreshReport();
+			}
+		};
+		
         // Setup the click listener for the next day button
         btnNextDate = (ImageButton) findViewById(R.id.btnNextDate);
         OnClickListener btnNextDateListener = new OnClickListener() {
@@ -101,11 +124,9 @@ public class ResultList extends Activity {
             	lblCurrentDate.setText(sdf.format(c.getTime()));
             	
             	amionReport = new OncallReport(pwd, c);
-            	ArrayList<AMIONPerson> tempList = amionReport.getPeople(filter);
-                adapter.people.clear();
-                adapter.people.addAll(tempList);
-                PerformSort();
-                adapter.notifyDataSetChanged();
+            	clearFilters();
+            	setupReport();
+                refreshReport();
             }
         };
         btnNextDate.setOnClickListener(btnNextDateListener);
@@ -120,23 +141,102 @@ public class ResultList extends Activity {
             	lblCurrentDate.setText(sdf.format(c.getTime()));
             	
             	amionReport = new OncallReport(pwd, c);
-            	ArrayList<AMIONPerson> tempList = amionReport.getPeople(filter);
-                adapter.people.clear();
-                adapter.people.addAll(tempList);
-                PerformSort();
-                adapter.notifyDataSetChanged();
+            	clearFilters();
+            	setupReport();
+        		refreshReport();
             }
         };
         btnPrevDate.setOnClickListener(btnPrevDateListener);
         
         // Setup and bind the adapter for the ListView with the ArrayList
-        ArrayList<AMIONPerson> tempList = amionReport.getPeople(filter);
+        ArrayList<AMIONPerson> tempList = amionReport.getPeople(filters);
         adapter = new MyAMIONPersonAdapter(this, R.layout.list_item, tempList);
         PerformSort();
         lstResults.setAdapter(adapter);
-        //setListAdapter(adapter);
+        //refreshReport();
+        
+        // This is a meant to be a generic List page, so you can set the title
+        // to whatever here.
+		String title=amionReport.getDefaultTitle();
+		if(filters.size()>0) {
+			title+=" (filter enabled)";
+		}
+        this.setTitle(title);
+
     }
 
+    private void setupReport() {
+    	filtersAvailable = amionReport.getFiltersAsStringArray();
+        filtersSelected = new boolean[filtersAvailable.length];
+    }
+    private void refreshReport() {
+    	ArrayList<AMIONPerson> tempList = amionReport.getPeople(filters);
+        adapter.people.clear();
+        adapter.people.addAll(tempList);
+        PerformSort();
+        adapter.notifyDataSetChanged();
+        
+        String title = amionReport.getDefaultTitle();
+		if(filters.size()>0) {
+			title+=" (filter enabled)";
+		}
+        this.setTitle(title);
+    }
+    private void clearFilters() {
+    	filters.clear();
+		for (int i=0; i<filtersSelected.length; i++) {
+			filtersSelected[i] = false;
+		}
+    }
+	
+    
+    @Override
+    protected Dialog onCreateDialog(int id) {
+    	switch(id) {
+    	case DATE_DIALOG_ID:
+    		Calendar calendar = amionReport.getDate();
+    		return new DatePickerDialog(this, mDateSetListener, calendar.getTime().getYear()+1900, calendar.getTime().getMonth(), calendar.getTime().getDate());
+    	case FILTER_DIALOG_ID:
+			return new AlertDialog.Builder( this )
+				.setTitle("Filter Jobs")
+				.setMultiChoiceItems(filtersAvailable, filtersSelected, new DialogSelectionClickHandler())
+				.setPositiveButton("OK", new DialogButtonClickHandler())
+				.setNegativeButton("Clear", new DialogButtonClickHandler())
+				.create();
+		}
+    	return null;
+    }
+    
+    public class DialogSelectionClickHandler implements DialogInterface.OnMultiChoiceClickListener {
+    	public void onClick(DialogInterface dialog, int clicked, boolean selected) {
+    		//Log.i("Me", filtersAvailable[clicked] + " selected: " + selected);
+    	}
+    }
+    public class DialogButtonClickHandler implements DialogInterface.OnClickListener {
+    	public void onClick(DialogInterface dialog, int clicked) {
+    		switch(clicked) {
+    		case DialogInterface.BUTTON_POSITIVE:
+    			filters.clear();
+    			for (int i=0; i<filtersSelected.length; i++) {
+    				if (filtersSelected[i]) {
+    					filters.add(filtersAvailable[i]);
+    				}
+    			}
+    			
+    			refreshReport();
+    			
+    			break;
+			case DialogInterface.BUTTON_NEGATIVE:
+    			clearFilters();
+				refreshReport();
+				
+				Toast.makeText(getApplication(), "neg pressed", Toast.LENGTH_LONG).show();
+				
+    			break;
+    		}
+    	}
+    }
+    
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -169,7 +269,10 @@ public class ResultList extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int itemId = item.getItemId();
-        if (itemId == 2) {
+        
+        if (itemId == 1) {
+        	refreshReport();
+        } else if (itemId == 2) {
             if (currentSort.equalsIgnoreCase("Sort by Job")) {
             	item.setTitle(currentSort);
             	currentSort = "Sort by Name";
@@ -180,10 +283,8 @@ public class ResultList extends Activity {
             PerformSort();
             adapter.notifyDataSetChanged();
         } else if (itemId == 3) {
-            Intent intent = new Intent(getApplication(), JobFilterList.class);
-            intent.putExtra("pwd", pwd);
-            startActivity(intent);
-        }
+            showDialog(FILTER_DIALOG_ID);
+        } 
         return true;
     }
 
@@ -191,9 +292,9 @@ public class ResultList extends Activity {
     private void PerformSort() {
     	
     	if (currentSort.equalsIgnoreCase("Sort by Job")) {
-            Collections.sort(adapter.people, new AMIONPersonJobComparator());
+            Collections.sort(adapter.people, new AMIONPerson.AMIONPersonJobComparator());
         } else if (currentSort.equalsIgnoreCase("Sort by Name")) {
-            Collections.sort(adapter.people, new AMIONPersonComparator());
+            Collections.sort(adapter.people, new AMIONPerson.AMIONPersonComparator());
         }
     	
     }

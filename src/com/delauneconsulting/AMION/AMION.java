@@ -2,10 +2,6 @@ package com.delauneconsulting.AMION;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -39,7 +35,7 @@ public class AMION extends Activity {
     ArrayAdapter<String> recentSearchesAdapter;
     ArrayList<String> searchList;
     String recentSearchItemSelected;
-    public static HashMap<String, AMIONReport> reports = new HashMap<String, AMIONReport>();;
+    //public static HashMap<String, AMIONReport> reports = new HashMap<String, AMIONReport>();;
 
     /** Called when the activity is first created. */
     @Override
@@ -122,7 +118,9 @@ public class AMION extends Activity {
         menu.add(0, Menu.FIRST, Menu.NONE, "Settings").setIcon(
                 android.R.drawable.ic_menu_preferences);
         menu.add(0, Menu.FIRST + 1, Menu.NONE, "About").setIcon(
-                android.R.drawable.ic_menu_info_details); // .setIcon(R.drawable.cloud);
+                android.R.drawable.ic_menu_info_details);
+        menu.add(0, Menu.FIRST + 2, Menu.NONE, "Quit").setIcon(
+                android.R.drawable.ic_menu_close_clear_cancel);
 
         return true;
     }
@@ -144,6 +142,8 @@ public class AMION extends Activity {
                 }
             });
             builder.show();
+        } else if (item.getItemId() == 3) {
+        	finish();
         }
         return true;
     }
@@ -157,15 +157,15 @@ public class AMION extends Activity {
 
             pwd = pwd.trim();
 
-            AMIONReport report = null;
-            if (reports.containsKey(pwd)) {
-                report = reports.get(pwd);
-            } else {
+            //AMIONReport report = null;
+            //if (reports.containsKey(pwd)) {
+            //    report = reports.get(pwd);
+            //} else {
                 // currently only OncallReport is supported
-            	Calendar c = Calendar.getInstance();
-                report = new OncallReport(pwd, c);
-                reports.put(pwd, report);
-            }
+            	//Calendar c = Calendar.getInstance();
+                //report = new OncallReport(pwd, c);
+                //reports.put(pwd, report);
+            //}
 
             if (saveSearch)
                 SaveLastSearch(pwd.toString());

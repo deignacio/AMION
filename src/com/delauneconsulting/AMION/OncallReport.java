@@ -45,7 +45,7 @@ public class OncallReport implements AMIONReport {
                     while (tokenizer.hasMoreTokens()) {
                         tok = tokenizer.nextToken();
                         tok = tok.replaceAll(ignoredToks, "");
-                        if (tok.length() == 0) {
+                        if (tok.length() < 2) {
                             continue;
                         }
                         registerPerson(tok, p);
@@ -111,26 +111,26 @@ public class OncallReport implements AMIONReport {
     /* (non-Javadoc)
      * @see com.delauneconsulting.AMION.AMIONReport#getPeople(java.lang.String)
      */
-    public ArrayList<AMIONPerson> getPeople(String filter) {
-        if (filter == null) {
+    public ArrayList<AMIONPerson> getPeople(ArrayList<String> filters) {
+        if (filters.size() == 0) {
             return allPeople;
+        } else {
+	        ArrayList<AMIONPerson> people = new ArrayList<AMIONPerson>();
+	        
+	        for (int i=0; i<filters.size(); i++) {
+	        	people.addAll(this.tokenizedPeople.get(filters.get(i)));
+	        }
+	
+	        return people;
         }
-
-        if (!this.tokenizedPeople.containsKey(filter)) {
-            return null;
-        }
-
-        return this.tokenizedPeople.get(filter);
     }
 
     private class FilterComparator implements Comparator<String> {
         public int compare(String s1, String s2) {
 
-            // parameter are of type Object, so we have to downcast it to Employee
-            // objects
+            // parameter are of type Object, so we have to downcast it to objects
             Integer numPeople1 = tokenizedPeople.get(s1).size();
             Integer numPeople2 = tokenizedPeople.get(s2).size();
-
 
             // we want descending
             return numPeople2.compareTo(numPeople1);
@@ -141,5 +141,22 @@ public class OncallReport implements AMIONReport {
         ArrayList<String> filters = new ArrayList<String>(tokenizedPeople.keySet());
         Collections.sort(filters, new FilterComparator());
         return filters;
+    }
+    public String[] getFiltersAsStringArray() {
+        ArrayList<String> filters = new ArrayList<String>(tokenizedPeople.keySet());
+        ArrayList<String> applicableFilters = new ArrayList<String>();
+        for (int i=0; i<filters.size(); i++) {
+        	if (tokenizedPeople.get(filters.get(i)).size() > 3) {
+        		applicableFilters.add(filters.get(i));
+        	}
+        }
+        
+        Collections.sort(applicableFilters);
+        //Collections.sort(applicableFilters, new FilterComparator());
+        String[] theFilters = new String[applicableFilters.size()];
+        for (int i=0; i<applicableFilters.size(); i++) {
+        	theFilters[i] = applicableFilters.get(i);
+        }
+        return theFilters;
     }
 }

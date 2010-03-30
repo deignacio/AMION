@@ -1,5 +1,7 @@
 package com.delauneconsulting.AMION;
 
+import java.util.Comparator;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,5 +74,33 @@ public class AMIONPerson {
             }
         });
         builder.show();
+    }
+    
+    public static class AMIONPersonJobComparator implements Comparator<AMIONPerson> {
+        public int compare(AMIONPerson p1, AMIONPerson p2) {
+
+            // parameter are of type Object, so we have to downcast it to Employee
+            // objects
+            String p1Job = p1.currentJob;
+            String p2Job = p2.currentJob;
+
+            // uses compareTo method of String class to compare names of the
+            // employee
+            return p1Job.compareTo(p2Job);
+        }
+    }
+    
+    public static class AMIONPersonComparator implements Comparator<AMIONPerson> {
+        public int compare(AMIONPerson p1, AMIONPerson p2) {
+
+            // parameter are of type Object, so we have to downcast it to Employee
+            // objects
+            String p1Name = p1.toString();
+            String p2Name = p2.toString();
+
+            // uses compareTo method of String class to compare names of the
+            // employee
+            return p1Name.compareTo(p2Name);
+        }
     }
 }
