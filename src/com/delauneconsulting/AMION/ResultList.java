@@ -65,8 +65,9 @@ public class ResultList extends Activity {
             public void onItemClick(AdapterView<?> parent, View arg1, int position, long arg3) {
                 Toast.makeText(
                         getApplication(),
-                        ((AMIONPerson) parent.getItemAtPosition(position)).comment,
-                        Toast.LENGTH_SHORT).show();
+                        "RAW:\n" + ((AMIONPerson) parent.getItemAtPosition(position)).comment + 
+                        "\n\nUrl for Report:\n" + amionReport.getUrl(),
+                        Toast.LENGTH_LONG).show();
             }
         };
         lstResults.setOnItemClickListener(itemListener);
@@ -198,7 +199,7 @@ public class ResultList extends Activity {
     		return new DatePickerDialog(this, mDateSetListener, calendar.getTime().getYear()+1900, calendar.getTime().getMonth(), calendar.getTime().getDate());
     	case FILTER_DIALOG_ID:
 			return new AlertDialog.Builder( this )
-				.setTitle("Filter Jobs")
+				//.setTitle("Filter Jobs")
 				.setMultiChoiceItems(filtersAvailable, filtersSelected, new DialogSelectionClickHandler())
 				.setPositiveButton("OK", new DialogButtonClickHandler())
 				.setNegativeButton("Clear", new DialogButtonClickHandler())
@@ -229,10 +230,7 @@ public class ResultList extends Activity {
 			case DialogInterface.BUTTON_NEGATIVE:
     			clearFilters();
 				refreshReport();
-				
-				Toast.makeText(getApplication(), "neg pressed", Toast.LENGTH_LONG).show();
-				
-    			break;
+				break;
     		}
     	}
     }
