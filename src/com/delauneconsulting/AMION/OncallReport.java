@@ -11,32 +11,31 @@ public class OncallReport implements AMIONReport {
     final private ArrayList<AMIONPerson> allPeople = new ArrayList<AMIONPerson>();
     final private HashMap<String, ArrayList<AMIONPerson>> tokenizedPeople = new HashMap<String, ArrayList<AMIONPerson>>();
     final private HashMap<String, String> titles = new HashMap<String, String>();
-    final private int rptNumber = 619;
-    final private String urlPattern = "http://www.amion.com/cgi-bin/ocs?Login=%s&Rpt=%s&Day=%s&Month=%s&Year=%s";
+    
+    final private String urlPattern = "http://www.amion.com/cgi-bin/ocs?Login=%s&Rpt=%s&Day=%s&Month=%s";
     final private String urlPatternBase = "http://www.amion.com/cgi-bin/ocs?Login=%s&Rpt=%s";
     final private String ignoredToks = "\\W"; //!@#$%^&*()_-+={}[]\\|;:<>,./?`~";
     
     private String passwd = null;
     private Calendar calendar;
+    private int rptNumber = 619;
     private int reportType = 0;
     private String response = null;
 
     public OncallReport(String pwd, Calendar calendar) {
         this.passwd = pwd;
-        //this.date = date;        
         this.calendar = calendar;
-        this.response = Helper.getHttpResponseAsString(String.format(this.urlPattern, this.passwd, this.rptNumber, calendar.getTime().getDate(), calendar.getTime().getMonth()+1, calendar.getTime().getYear()+1900));
+        this.rptNumber = rptNumber;
+        this.response = Helper.getHttpResponseAsString(String.format(this.urlPattern, this.passwd, this.rptNumber, calendar.getTime().getDate(), calendar.getTime().getMonth()+1));
         
         //TODO: find a way to get data by date from amion.com reports!
-        if (this.response.length() == 0) {
-        	this.reportType = 1;
-        	this.response = Helper.getHttpResponseAsString(String.format(this.urlPatternBase, this.passwd, this.rptNumber));
-        }
+        //if (this.response.length() == 0) {
+        //	this.reportType = 1;
+        //	this.response = Helper.getHttpResponseAsString(String.format(this.urlPatternBase, this.passwd, this.rptNumber));
+        //}
         
         tokenizePeople();
     }
-
-    
     
     private void tokenizePeople() {
         try {
@@ -52,7 +51,7 @@ public class OncallReport implements AMIONReport {
                     
                     allPeople.add(p);
 
-                    StringTokenizer tokenizer = new StringTokenizer(p.currentJob);
+                    StringTokenizer tokenizer = new StringTokenizer(p.assignmentName);
                     String tok;
                     while (tokenizer.hasMoreTokens()) {
                         tok = tokenizer.nextToken();

@@ -328,7 +328,7 @@ public class ResultList extends Activity {
                     txtName.setText(p.toString());
                 }
                 if (txtJob != null) {
-                    txtJob.setText(p.currentJob);
+                    txtJob.setText(p.assignmentName);
                 }
             }
             return v;

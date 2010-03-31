@@ -12,9 +12,14 @@ import android.view.MenuItem;
 public class AMIONPerson {
 
 	public String id = "";
-    public String firstName = "";
-    public String lastName = "";
-    public String currentJob = "";
+	public String backupId = "";
+	public String className = "";
+    public String name = "";
+    public String assignmentDate = "";
+    public String assignmentStartTime = "";
+    public String assignmentEndTime = "";
+    public String assignmentName = "";
+    public String assignmentType = "";
     public String comment = "";
     
     public boolean existsInContacts = false;
@@ -29,7 +34,7 @@ public class AMIONPerson {
         String personName = strToParse.substring(1, index);
 
         // TODO: Split first and last names out
-        this.lastName = personName;
+        this.name = personName;
 
         // get rid of the name field, since we already have it, then
         // clean up everything else
@@ -44,16 +49,14 @@ public class AMIONPerson {
 
         //this is the person id value
         this.id = temp[0];
+        this.backupId = temp[1];
         
         //this is the job value
-        this.currentJob = temp[2];
+        this.assignmentName = temp[2];
     }
 
     public String toString() {
-        if (firstName.length() > 0)
-            return lastName + ", " + firstName;
-        else
-            return lastName;
+        return name;
     }
 
     public void populateContextMenu(ContextMenu menu) {
@@ -81,8 +84,8 @@ public class AMIONPerson {
 
             // parameter are of type Object, so we have to downcast it to Employee
             // objects
-            String p1Job = p1.currentJob;
-            String p2Job = p2.currentJob;
+            String p1Job = p1.assignmentName;
+            String p2Job = p2.assignmentName;
 
             // uses compareTo method of String class to compare names of the
             // employee
