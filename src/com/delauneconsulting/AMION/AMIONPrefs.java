@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 public class AMIONPrefs extends Activity {
 
-    public static final String PREFS_NAME = "AmionPrefs";
     EditText txtUsername;
     EditText txtPassword;
     Button btnSavePrefs;
@@ -27,7 +26,7 @@ public class AMIONPrefs extends Activity {
         txtPassword = (EditText) findViewById(R.id.txtPassword);
         btnSavePrefs = (Button) findViewById(R.id.btnSavePrefs);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getSharedPreferences(AMION.PREFS_NAME, 0);
 
         txtUsername.setText(settings.getString("pagingUsername", ""));
         txtPassword.setText(settings.getString("pagingPassword", ""));
@@ -37,7 +36,7 @@ public class AMIONPrefs extends Activity {
                 Editable username = txtUsername.getText();
                 Editable pwd = txtPassword.getText();
 
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                SharedPreferences settings = getSharedPreferences(AMION.PREFS_NAME, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("pagingUsername", username.toString());
                 editor.putString("pagingPassword", pwd.toString());

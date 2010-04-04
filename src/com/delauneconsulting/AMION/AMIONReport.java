@@ -5,14 +5,13 @@ import java.util.Calendar;
 
 public interface AMIONReport {
 
-	public abstract String getTitle(String filter);
+	public abstract String getTitle();
 
-    public abstract ArrayList<AMIONPerson> getPeople(ArrayList<String> filters);
-
-    public abstract String getDefaultTitle();
-
-    public abstract ArrayList<String> getFilters();
-    public abstract String[] getFiltersAsStringArray();
+    public abstract ArrayList<AMIONPerson> getPeople(String className, String assignmentName);
+    public abstract ArrayList<AMIONAssignment> getScheduleForPerson(String personId);
+    
+    public abstract ArrayList<String> getClasses();
+    public abstract ArrayList<String> getAssignments();
     
     public abstract Calendar getDate();
 

@@ -1,13 +1,10 @@
 package com.delauneconsulting.AMION;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuItem;
 
 public class AMIONPerson {
 
@@ -15,19 +12,15 @@ public class AMIONPerson {
 	public String backupId = "";
 	public String className = "";
     public String name = "";
-    public String assignmentDate = "";
-    public String assignmentStartTime = "";
-    public String assignmentEndTime = "";
-    public String assignmentName = "";
-    public String assignmentType = "";
+    public ArrayList<AMIONAssignment> assignments = new ArrayList<AMIONAssignment>();
     public String comment = "";
     
-    public boolean existsInContacts = false;
-    public String phoneNumber = "";
-
     public AMIONPerson() {
     }
     public AMIONPerson(String strToParse) {
+    	this(strToParse, 612);
+    }
+    public AMIONPerson(String strToParse, int rptNumber) {
     	this.comment = strToParse;
 
         int index = strToParse.indexOf("\"", 2);
@@ -47,63 +40,103 @@ public class AMIONPerson {
             }
         }
 
-        //this is the person id value
-        this.id = temp[0];
-        this.backupId = temp[1];
-        
-        //this is the job value
-        this.assignmentName = temp[2];
+        AMIONAssignment a;
+        switch (rptNumber) {
+        case 619:
+        	this.id = temp[0];
+            this.backupId = temp[1];
+            
+            /*
+            a = new AMIONAssignment();
+            a.personId = this.id;
+            a.name = temp[2];
+            a.id = temp[3];
+            a.backupId = temp[4];
+            a.assignmentDate = temp[5];
+            //this.assignmentStartTime = temp[6];
+            //this.assignmentEndTime = temp[7];
+            this.assignments.add(a);
+            */
+            
+        	break;
+    	default:
+    		this.id = temp[0];
+            this.backupId = temp[1];
+            
+            /*
+            a = new AMIONAssignment();
+            a.personId = this.id;
+            a.name = temp[3];
+            a.type = temp[2];
+            a.id = temp[4];
+            a.backupId = temp[5];
+            this.assignments.add(a);
+            */
+            
+    		break;
+        }
     }
 
+    
+    
     public String toString() {
-        return name;
+        String str = String.format("Id: %s\n", this.id);
+        str += String.format("BackupId: %s\n", this.backupId);
+        str += String.format("Name: %s\n", this.name);
+        str += String.format("Class: %s\n", this.className);
+        //str += String.format("Assignment: %s\n", this.assignmentName);
+        //str += String.format("Type: %s\n", this.assignmentType);
+        //str += String.format("Id: %s\n", this.assignmentId);
+        //str += String.format("BackupId: %s", this.assignmentBackupId);
+    	
+    	return str;
     }
 
     public void populateContextMenu(ContextMenu menu) {
-        menu.setHeaderTitle(toString());
+        menu.setHeaderTitle(this.name);
 
-        menu.add(0, Menu.FIRST, Menu.NONE, "View Schedule");
-        menu.add(0, Menu.FIRST + 1, Menu.NONE, "Send Page");
-        menu.add(0, Menu.FIRST + 2, Menu.NONE, "Link Contact");
+        menu.add(0, Menu.FIRST, Menu.NONE, "Show this Team");
+        menu.add(0, Menu.FIRST + 1, Menu.NONE, "Set this as me");
+        menu.add(0, Menu.FIRST + 2, Menu.NONE, "All Assignments");
     }
 
-    public void onContextMenuItemSelected(Context context, MenuItem item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(item.getItemId() + " " + item.getTitle() + " " + toString());
-        builder.setCancelable(true);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
-    }
-    
-    public static class AMIONPersonJobComparator implements Comparator<AMIONPerson> {
-        public int compare(AMIONPerson p1, AMIONPerson p2) {
-
-            // parameter are of type Object, so we have to downcast it to Employee
-            // objects
-            String p1Job = p1.assignmentName;
-            String p2Job = p2.assignmentName;
-
-            // uses compareTo method of String class to compare names of the
-            // employee
-            return p1Job.compareTo(p2Job);
-        }
-    }
-    
+    //Default sorter is by name
     public static class AMIONPersonComparator implements Comparator<AMIONPerson> {
         public int compare(AMIONPerson p1, AMIONPerson p2) {
 
-            // parameter are of type Object, so we have to downcast it to Employee
-            // objects
-            String p1Name = p1.toString();
-            String p2Name = p2.toString();
+            String p1Name = p1.name;
+            String p2Name = p2.name;
 
-            // uses compareTo method of String class to compare names of the
-            // employee
             return p1Name.compareTo(p2Name);
         }
     }
+    public static class AMIONPersonClassComparator implements Comparator<AMIONPerson> {
+        public int compare(AMIONPerson p1, AMIONPerson p2) {
+
+            String p1Class = p1.className;
+            String p2Class = p2.className;
+
+            return p1Class.compareTo(p2Class);
+        }
+    }
+    /*
+    public static class AMIONPersonAssignmentComparator implements Comparator<AMIONPerson> {
+        public int compare(AMIONPerson p1, AMIONPerson p2) {
+
+            String p1Assignment = p1.assignmentName;
+            String p2Assignment = p2.assignmentName;
+
+            return p1Assignment.compareTo(p2Assignment);
+        }
+    }
+    public static class AMIONPersonDateComparator implements Comparator<AMIONPerson> {
+        public int compare(AMIONPerson p1, AMIONPerson p2) {
+
+            String p1Date = p1.assignmentDate;
+            String p2Date = p2.assignmentDate;
+
+            return p1Date.compareTo(p2Date);
+        }
+    }
+    */
 }

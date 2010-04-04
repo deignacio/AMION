@@ -8,4 +8,6 @@
     
 
 <string name="aboutUs">AMION\n\nCopyright DelauneConsulting 2010\n\nCredits:\nChristian Del\'Aune\nDave Ignacio</string>
+<string name="ddClassesPrompt">Classes</string>
+<string name="ddAssignmentsPrompt">Assignments</string>
 </resources>

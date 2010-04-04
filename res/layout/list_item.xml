@@ -1,23 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
+	android:orientation="horizontal"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	>
-	<TextView
-		android:id="@+id/txtName"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:textSize="20dp"
-		android:layout_marginTop="3px" android:layout_marginLeft="3px" android:layout_marginRight="3px"
-	/>
- 
-	<TextView
-		android:id="@+id/txtJob"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="10px" android:layout_marginRight="3px" android:layout_marginBottom="3px"
-		android:textSize="14dp"
-	/>
+	
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="wrap_content"
+	    android:layout_height="fill_parent"
+	    android:layout_weight="5"
+	    >
+		<TextView
+			android:id="@+id/txtName"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:textSize="20dp"
+			android:layout_marginTop="3px" android:layout_marginLeft="3px" android:layout_marginRight="3px"
+		/>
+	 
+		<TextView
+			android:id="@+id/txtAssignment"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10px" android:layout_marginRight="3px" android:layout_marginBottom="3px"
+			android:textSize="14dp"
+		/>
+		
+	</LinearLayout>
+	
+	<!-- 
+	<ImageView
+	   android:id="@+id/imgOncall"
+	   android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:src="@drawable/icon"
+       android:layout_weight="1"
+    />
+    -->
 
 </LinearLayout>

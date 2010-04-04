@@ -1,7 +1,9 @@
 package com.delauneconsulting.AMION;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,8 +28,12 @@ import android.widget.AdapterView.OnItemLongClickListener;
 public class AMION extends Activity {
 
     public static final String PREFS_NAME = "AmionPrefs";
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yy");
+    public static SharedPreferences settings;
     Context context = this;
 
+    public static HashMap<String, AMIONDataSet> master = new HashMap<String, AMIONDataSet>();
+    
     private Button loginButton;
     private EditText password;
 
@@ -36,7 +42,7 @@ public class AMION extends Activity {
     ArrayList<String> searchList;
     String recentSearchItemSelected;
     //public static HashMap<String, AMIONReport> reports = new HashMap<String, AMIONReport>();;
-
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +66,7 @@ public class AMION extends Activity {
 
         // Check to see if there are any saved searches
         // saves as a comma delimited string in a single prefs item
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        settings = getSharedPreferences(PREFS_NAME, 0);
         String recentString = settings.getString("recentSearches", "");
         // fill an ArrayList with the saved search items
         searchList = new ArrayList<String>(Arrays.asList(recentString.split(",")));
